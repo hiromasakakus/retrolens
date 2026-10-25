@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1a18">
+<title>RetroLens v0.5 | 自动锁定屏幕与日文 OCR</title>
+<style>
+:root{color-scheme:dark;--bg:#081410;--panel:#11221b;--surface:#182c23;--surface2:#21392c;--line:#385546;--ink:#f2f2e8;--muted:#a8c0b0;--accent:#aae3bd;--gold:#e1ca88;--red:#f2a9a9}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 0% 0%,#19372b 0%,#081410 65%);font:14px/1.55 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink)}button,input,textarea,select{font:inherit}button{background:#263d30;border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px 12px;cursor:pointer;touch-action:manipulation}button:hover{background:#2f4a3b}button:disabled{opacity:.45;cursor:not-allowed}.primary{background:var(--accent);color:#142b20;border-color:var(--accent);font-weight:750}.primary:hover{background:#c5f0d0}.secondary{background:#183327}.danger{color:#fcc0be}.shell{max-width:1190px;margin:0 auto;padding:20px 16px 70px}.header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.brand{font-size:35px;font-weight:850;letter-spacing:-.06em;line-height:1}.brand em{font-style:normal;color:var(--accent)}.version{font-size:11px;letter-spacing:0;color:var(--muted);font-weight:400;margin-left:12px}.overline{color:var(--muted);letter-spacing:.12em;font-size:11px;margin-top:7px}.chip{font-size:12px;border:1px solid var(--line);border-radius:50px;padding:6px 10px;color:var(--accent)}.intro{font-size:12px;color:#d2e1d4;background:#1a3225;border:1px solid #3b5c43;padding:11px 13px;border-radius:12px;margin-bottom:15px}.layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);gap:14px}.stack{display:flex;flex-direction:column;gap:14px}.panel{border:1px solid var(--line);border-radius:17px;padding:15px;background:var(--panel);min-width:0;box-shadow:0 8px 20px #0002}.titlebar{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:11px}.titlebar strong{font-size:15px}.tag{font-size:11px;color:var(--muted)}.workarea{position:relative;background:#020805;border-radius:12px;overflow:hidden;border:1px solid #31523f;touch-action:none;user-select:none}.workarea canvas{width:100%;height:auto;display:block;touch-action:none;aspect-ratio:16/10}.hoverlabel{position:absolute;left:8px;top:8px;border-radius:7px;font-size:11px;background:#061911c9;color:#e7f2df;padding:4px 7px;pointer-events:none}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.buttons button{flex:1 0 auto}.tiny{font-size:11px;color:var(--muted);line-height:1.7;margin-top:8px}.state{overflow-wrap:anywhere;font-size:12px;min-height:36px;border:1px solid #2a4838;background:#0c2017;padding:9px 11px;border-radius:10px;margin-top:10px;color:#cfe7d2}.state.error{color:var(--red)}.state.ok{color:var(--accent)}.muted{color:var(--muted)}.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.label{display:block;font-weight:700;font-size:12px;color:var(--muted);margin-bottom:5px}.select,textarea,input[type=url]{width:100%;border:1px solid var(--line);background:#0b1b13;color:var(--ink);border-radius:10px;padding:9px 10px}textarea{resize:vertical;min-height:112px;line-height:1.65;white-space:pre-wrap}.output{border:1px solid #3f634a;background:#203b2a;border-radius:12px;padding:13px;min-height:85px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.7}.output.placeholder{color:var(--muted);font-size:12px}.check{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#bfd5c5;margin-top:10px}.check input{width:17px;height:17px;accent-color:#99dcb1}.range{width:100%}.line{border:0;border-top:1px solid var(--line);margin:15px 0}.pills{display:flex;gap:6px;flex-wrap:wrap}.pills span{font-size:11px;border-radius:7px;background:#1d3828;border:1px solid #375844;color:#b8d7bc;padding:4px 7px}.history{display:grid;gap:7px;margin-top:9px}.hitem{background:#142d1f;border:1px solid #30503b;border-radius:8px;padding:8px 9px;text-align:left;width:100%;font-size:12px;white-space:pre-line}.hitem small{color:var(--accent)}.footer{font-size:11px;color:#adc2b2;line-height:1.9;margin-top:19px}.help{margin:8px 0 0;padding-left:19px;color:var(--muted);font-size:12px}.help li{margin:3px 0}.hidden{display:none!important}details{background:#152c21;border:1px solid var(--line);padding:10px 12px;border-radius:12px;margin-top:10px}summary{cursor:pointer;font-weight:700;font-size:12px}details p{font-size:11px;color:var(--muted)}code{color:#dfd29c;overflow-wrap:anywhere}.lights{display:flex;gap:5px;align-items:center}.light{height:7px;width:7px;background:#64766c;border-radius:50%}.light.ready{background:#91dcac}.framebox{border:1px solid #3b5543;border-radius:12px;overflow:hidden;position:relative;background:#040d08;touch-action:none}.framebox canvas{display:block;width:100%;height:auto;touch-action:none}.warn{color:#e5cca0}.caption{color:var(--muted);font-size:11px;margin-top:7px}a{color:var(--accent)}
+@media(max-width:850px){.layout{grid-template-columns:minmax(0,1fr)}.shell{padding:14px 10px 50px}.panel{padding:12px}.brand{font-size:30px}.buttons button{padding:10px 9px}.intro{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="header"><div><div class="brand">RETRO<em>LENS</em><span class="version">v0.5 AutoLock</span></div><div class="overline">CAMERA → SCREEN → PERSPECTIVE → TEXT REGION → OCR</div></div><span class="chip">手机网页 · 可实际测试</span></header>
+  <div class="intro"><b>v0.5：</b>优先锁定「被黑边包围的游戏画面」本身（4:3 游戏在 16:9 电视上的左右黑边也算），四条边按真实的亮暗交界逐条拟合，不会再被画面边缘的暗色内容拉歪；锁定后取景自动放大到屏幕附近，周围房间不再占画面。框呈轻微梯形属正常透视，拉正后的画面在 02 区查看。仅在定位偏差时拖动绿色角点修正。日文 OCR 支持多个下载源重试，但在手机本地文件查看器中可能受到安全限制；请优先通过 HTTPS 打开。</div>
+  <div class="layout">
+    <div class="stack">
+      <section class="panel">
+        <div class="titlebar"><strong>01 / 摄像头与屏幕定位</strong><span class="tag" id="sourceName">尚未选择画面</span></div>
+        <div class="workarea" id="previewWrap"><canvas id="preview" width="960" height="600" aria-label="游戏画面与可拖动的屏幕四角"></canvas><span class="hoverlabel" id="frameLabel">等待自动锁定</span></div>
+        <video id="video" autoplay muted playsinline class="hidden"></video><input type="file" accept="image/*" id="file" hidden>
+        <div class="buttons"><button class="primary" id="cameraBtn">开启摄像头</button><button id="uploadBtn">上传照片 / 截图</button><button id="stopBtn">停止摄像头</button></div>
+        <div class="buttons"><button class="primary" id="detectBtn">重新自动定位</button><button id="manualBtn">四角校正（备用）</button><button id="resetBtn">清除定位</button></div>
+        <div class="tiny">绿色框＝锁定的游戏画面。电视不正对镜头时框会呈轻微梯形，这是正常透视，02 区会把它拉成正矩形。识别错误时才需拖动角点。横握手机、让电视占满取景，OCR 效果最好。</div>
+        <label class="check"><input type="checkbox" id="autoLock" checked> 自动识别并追踪屏幕边界（建议保持开启）</label><br><label class="check"><input type="checkbox" id="zoomView" checked> 锁定后取景只显示屏幕附近（隐藏周围房间）</label><br><label class="check"><input type="checkbox" id="autoWatch"> 每 4 秒检查日文文字变化（较耗电）</label>
+        <div class="state" id="status" role="status" aria-live="polite">准备就绪。上传照片或开启摄像头后会自动定位。手机摄像头建议通过 HTTPS 打开。</div>
+      </section>
+      <section class="panel">
+        <div class="titlebar"><strong>02 / 透视矫正后的画面</strong><span class="tag" id="rectInfo">等待屏幕定位</span></div>
+        <div class="framebox"><canvas id="rectified" width="880" height="660" aria-label="已校正游戏画面，可拖动选中文字区域"></canvas></div>
+        <div class="caption">橙色框＝待 OCR 的文字区域。在这幅画面上滑动即可手工框选新的区域。</div>
+        <div class="buttons"><button class="primary" id="textBtn">② 自动寻找文字框</button><button id="nextBtn">下一个候选框</button><button id="fullBtn">全屏 OCR 区域</button></div>
+        <div class="fields">
+          <label><span class="label">图像预处理</span><select id="preprocess" class="select"><option value="contrast">灰度增强（推荐）</option><option value="native">保持彩色</option><option value="adaptive">自适应二值化</option></select></label>
+          <label><span class="label">文本区域模式</span><select id="roiMode" class="select"><option value="auto">自动寻找框</option><option value="bottom">底部对话区</option><option value="full">整个游戏画面</option></select></label>
+        </div>
+        <div class="buttons"><button class="primary" id="ocrBtn">③ 识别日文文字</button><button id="reCaptureBtn">重新采集这一帧</button></div>
+      </section>
+    </div>
+    <div class="stack">
+      <section class="panel">
+        <div class="titlebar"><strong>03 / OCR 与语义判断</strong><span class="tag" id="ocrInfo">日文识别模型未载入</span></div>
+        <label class="label" for="original">检测到的日文（可以修改）</label>
+        <textarea id="original" spellcheck="false" placeholder="自动寻找显示屏 → 透视拉正 → 定位文字框。然后点击识别日文。"></textarea>
+        <div class="fields">
+          <label><span class="label">界面文字类型</span><select id="kind" class="select"><option value="auto">自动推测</option><option value="dialogue">人物对话</option><option value="narration">剧情旁白</option><option value="menu">菜单 / 选择项</option><option value="data">属性 / 数据列表</option><option value="system">系统提示</option></select></label>
+          <label><span class="label">识别语言</span><select id="lang" class="select"><option value="jpn">日文（横排）</option><option value="jpn_vert">日文（竖排）</option></select></label>
+        </div>
+        <div class="tiny" id="semanticHint">分类是结合区域布局及 OCR 内容的规则推测；现阶段不是训练完成的游戏语义 AI。</div>
+        <div class="buttons"><button id="copyBtn">复制日文</button><button id="clearBtn">清空历史</button></div>
+      </section>
+      <section class="panel">
+        <div class="titlebar"><strong>04 / 中文翻译</strong><span class="tag" id="translateMode">需要翻译服务</span></div>
+        <div id="translation" class="output placeholder">尚未获得中文译文。OCR 可以独立运行；中文翻译可打开外部网站，或使用你自己的 HTTPS 翻译接口。</div>
+        <div class="buttons"><button class="primary" id="translateBtn">翻译当前文字</button><button id="externalBtn">打开在线翻译 ↗</button></div>
+        <details><summary>配置自有 AI 翻译接口（可选）</summary>
+          <p>使用你控制的 HTTPS 后端，而不是将秘密 API Key 写进公开 HTML。请求：<code>POST {"text":"...","kind":"dialogue","history":[],"target_language":"zh-CN"}</code>；返回：<code>{"translation":"..."}</code>。后端需要允许 CORS。</p>
+          <label class="label" for="api">自有服务接口地址</label><input id="api" type="url" placeholder="https://your-domain.example/translate" autocomplete="off"><p>留空时，翻译按钮会打开在线翻译，不会编造译文。</p>
+        </details>
+      </section>
+      <section class="panel">
+        <div class="titlebar"><strong>最近识别记录</strong><span class="tag">仅当前页面内存</span></div>
+        <div class="history" id="history"><span class="tiny">暂无记录。</span></div>
+      </section>
+      <section class="panel">
+        <div class="titlebar"><strong>使用与状态</strong><span class="lights"><span id="cvLamp" class="light"></span><span id="ocrLamp" class="light"></span></span></div>
+        <ol class="help"><li>用 HTTPS 链接在手机浏览器打开（不要使用 edge://external-file）。</li><li>上传游戏照片或开启摄像头，等待自动锁屏。</li><li>检查绿色四角和黄色文字框；如有偏差再拖动修正。</li><li>点击「识别日文文字」。首次需加载 OCR 脚本、WASM 与语言数据。</li><li>网络受限时查看明确的加载错误；可以改用不同网络，或部署本地静态资源。</li></ol>
+        <div id="runtimeInfo" class="tiny">屏幕视觉检测：浏览器本地运行 · 日文 OCR：待加载。</div>
+      </section>
+    </div>
+  </div>
+  <div class="footer">RetroLens v0.5 为可运行的技术验证版，不是已训练完毕的商业级翻译系统。摄像头图像与本地 OCR 结果默认不会上传；OCR 引擎、工作线程和日文语言模型需访问第三方网站，使用外部翻译时将向翻译服务发送文字。屏幕边界检测优先寻找四边形及大面积游戏内容，无法保证对 CRT 曲面、全黑场景、无边框菜单都自动正确。可手动拖动四角或重新选择文字区域。视频和图片不写入持久存储。</div>
+</div>
+<script>
+'use strict';
+const el=id=>document.getElementById(id);
+const preview=el('preview'),pctx=preview.getContext('2d'), rectified=el('rectified'),rctx=rectified.getContext('2d',{willReadFrequently:true}),vid=el('video');
+const s={source:'none',stream:null,img:null,url:null,quad:null,frame:null,corrected:null,boxes:[],boxIndex:-1,roi:null,drag:null,ocrWorker:null,ocrLoad:null,cvLoad:null,cv:null,processing:false,autoTimer:null,lastFingerprint:null,lastText:'',history:[],editROI:null,selectedKind:'dialogue',stopped:false,trackingTimer:null,detectTicket:0,cornerMode:'auto',libOrigin:null};
+const PCW=preview.width,PCH=preview.height;
+function notify(msg,tone=''){let e=el('status');e.textContent=msg;e.className='state '+tone;}
+function curSrc(){if(s.source==='camera'&&vid.readyState>=2&&vid.videoWidth)return{elem:vid,w:vid.videoWidth,h:vid.videoHeight};if(s.source==='image'&&s.img)return{elem:s.img,w:s.img.naturalWidth,h:s.img.naturalHeight};return null;}
+function fit(w,h,W,H){let z=Math.min(W/w,H/h);return{x:(W-w*z)/2,y:(H-h*z)/2,w:w*z,h:h*z};}
+// Preview viewport: after a lock, show only the area around the screen (the rest of the room is noise).
+s.view={x:0,y:0,w:1,h:1};
+function targetView(src){if(!el('zoomView').checked||!s.quad)return{x:0,y:0,w:1,h:1};if(s.drag)return s.view;const xs=s.quad.map(p=>p.x),ys=s.quad.map(p=>p.y),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+ let pw=(x1-x0)*src.w*1.4,ph=(y1-y0)*src.h*1.4;const A=PCW/PCH;if(pw/ph<A)pw=ph*A;else ph=pw/A;pw=Math.min(pw,src.w);ph=Math.min(ph,src.h);
+ const cx=(x0+x1)/2*src.w,cy=(y0+y1)/2*src.h,vx=Math.max(0,Math.min(src.w-pw,cx-pw/2)),vy=Math.max(0,Math.min(src.h-ph,cy-ph/2));return{x:vx/src.w,y:vy/src.h,w:pw/src.w,h:ph/src.h};}
+function viewFit(src){const v=s.view;return fit(v.w*src.w,v.h*src.h,PCW,PCH);}
+function snapFrame(maxSide=1920){let src=curSrc();if(!src)throw Error('请先开启摄像头或上传图片');let scale=Math.min(1,maxSide/Math.max(src.w,src.h)),c=document.createElement('canvas');c.width=Math.round(src.w*scale);c.height=Math.round(src.h*scale);c.getContext('2d',{willReadFrequently:true}).drawImage(src.elem,0,0,c.width,c.height);return c;}
+function pointOnPreview(pt){const source=curSrc();if(!source)return null;const f=viewFit(source),v=s.view;return{x:f.x+(pt.x-v.x)/v.w*f.w,y:f.y+(pt.y-v.y)/v.h*f.h};}
+function pointFromPreview(x,y){let src=curSrc();if(!src)return null;const f=viewFit(src),v=s.view;return{x:Math.max(0,Math.min(1,v.x+(x-f.x)/f.w*v.w)),y:Math.max(0,Math.min(1,v.y+(y-f.y)/f.h*v.h))};}
+function renderPreview(){pctx.clearRect(0,0,PCW,PCH);pctx.fillStyle='#040c08';pctx.fillRect(0,0,PCW,PCH);let src=curSrc();if(src){const tv=targetView(src),v=s.view,k=.22;for(const key of ['x','y','w','h'])v[key]+=(tv[key]-v[key])*k;const f=viewFit(src);pctx.drawImage(src.elem,v.x*src.w,v.y*src.h,v.w*src.w,v.h*src.h,f.x,f.y,f.w,f.h);}else{pctx.fillStyle='#83a996';pctx.font='18px system-ui';pctx.textAlign='center';pctx.fillText('上传游戏截图，或开启手机摄像头',PCW/2,PCH/2);}
+ if(s.quad&&src){const pts=s.quad.map(pointOnPreview);pctx.beginPath();pts.forEach((pt,i)=>i?pctx.lineTo(pt.x,pt.y):pctx.moveTo(pt.x,pt.y));pctx.closePath();pctx.fillStyle='rgba(158,238,180,.08)';pctx.fill();pctx.strokeStyle='#9ff4b5';pctx.lineWidth=3;pctx.stroke();pts.forEach((pt,i)=>{pctx.beginPath();pctx.arc(pt.x,pt.y,10,0,Math.PI*2);pctx.fillStyle='#9ff4b5';pctx.fill();pctx.fillStyle='#113323';pctx.textAlign='center';pctx.font='bold 12px system-ui';pctx.fillText(''+(i+1),pt.x,pt.y+4);});}}
+function tick(){renderPreview();requestAnimationFrame(tick)}requestAnimationFrame(tick);
+function viewCoords(e,canvas){let b=canvas.getBoundingClientRect();return{x:(e.clientX-b.left)/b.width*canvas.width,y:(e.clientY-b.top)/b.height*canvas.height};}
+preview.addEventListener('pointerdown',e=>{if(!s.quad)return;let q=viewCoords(e,preview),pts=s.quad.map(pointOnPreview);let ds=pts.map(pt=>Math.hypot(pt.x-q.x,pt.y-q.y));let i=ds.indexOf(Math.min(...ds));if(ds[i]>45)return;s.cornerMode='manual';setLockLabel('手动校正中 · 自动追踪暂停（点“重新自动定位”恢复）');s.drag={type:'quad',index:i};preview.setPointerCapture(e.pointerId);});
+preview.addEventListener('pointermove',e=>{if(!s.drag||s.drag.type!=='quad')return;let q=viewCoords(e,preview),p=pointFromPreview(q.x,q.y);if(!p)return;s.quad[s.drag.index]=p;});
+preview.addEventListener('pointerup',e=>{if(s.drag?.type==='quad'){s.drag=null;rectify().then(()=>findTextBoxes()).catch(err=>notify(err.message,'error'));}});
+preview.addEventListener('pointercancel',()=>s.drag=null);
+function clearRectification(){s.corrected=null;s.boxes=[];s.roi=null;s.boxIndex=-1;drawRectified();el('rectInfo').textContent='等待屏幕定位';}
+function stopCam(){if(s.trackingTimer){clearInterval(s.trackingTimer);s.trackingTimer=null} s.stream?.getTracks().forEach(t=>t.stop());s.stream=null;if(s.source==='camera'){s.source='none';s.quad=null;clearRectification();}el('sourceName').textContent=s.source==='image'?'静态图片':'摄像头未运行';}
+el('stopBtn').onclick=()=>{stopCam();notify('摄像头已停止。');};
+el('cameraBtn').onclick=async()=>{try{if(!navigator.mediaDevices?.getUserMedia)throw Error('此浏览器上下文不支持摄像头；需要 HTTPS 或 localhost。');stopCam();const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}}});vid.srcObject=stream;await vid.play();s.stream=stream;s.source='camera';s.quad=null;s.lastFingerprint=null;s.cornerMode='auto';clearRectification();el('sourceName').textContent='手机摄像头';notify('摄像头已开启，正在自动锁定屏幕…'+(vid.videoHeight>vid.videoWidth*1.15?' 提示：横握手机并靠近一些，游戏画面会占用更多像素，文字更清晰。':''));setTimeout(()=>detectScreen(false),550);startTracking();}catch(e){notify('摄像头启动失败：'+e.message,'error')}};
+el('uploadBtn').onclick=()=>el('file').click();
+el('file').onchange=async e=>{let file=e.target.files?.[0];if(!file)return;stopCam();if(s.url)URL.revokeObjectURL(s.url);let url=URL.createObjectURL(file),im=new Image();im.onload=()=>{s.img=im;s.url=url;s.source='image';s.quad=null;s.lastFingerprint=null;s.cornerMode='auto';clearRectification();el('sourceName').textContent='上传的照片';notify('照片已载入，正在自动检测屏幕边界…');detectScreen(false)};im.onerror=()=>{URL.revokeObjectURL(url);notify('无法读取所选图片。','error')};im.src=url;e.target.value='';};
+el('manualBtn').onclick=async()=>{if(!curSrc())return notify('请先选择画面。','error');s.cornerMode='manual';s.quad=[{x:.13,y:.13},{x:.87,y:.13},{x:.87,y:.87},{x:.13,y:.87}];notify('已设置可拖拽的四个角点。调整后会重新拉正。');await rectify();await findTextBoxes();};
+el('resetBtn').onclick=()=>{s.quad=null;s.pendingQuad=null;setLockLabel('等待自动锁定');s.lastFingerprint=null;s.cornerMode='auto';clearRectification();notify('已清除定位，准备重新自动检测。');if(curSrc())detectScreen(false);};
+function externalScript(src,timeoutMs=9500){return new Promise((resolve,reject)=>{let script=document.createElement('script'),finished=false;const done=(err)=>{if(finished)return;finished=true;clearTimeout(timer);script.onerror=null;script.onload=null;if(err){script.remove();reject(err)}else resolve(src)};const timer=setTimeout(()=>done(new Error('加载超时 '+src)),timeoutMs);script.src=src;script.async=true;script.crossOrigin='anonymous';script.onload=()=>done();script.onerror=()=>done(new Error('脚本加载失败 '+src));document.head.append(script)})}
+async function loadOCRScript(){const sources=[
+ 'https://unpkg.com/tesseract.js@5.1.1/dist/tesseract.min.js',
+ 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+ 'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js'];
+ if(window.Tesseract)return 'already-loaded';let errors=[];
+ for(let i=0;i<sources.length;i++){el('ocrInfo').textContent='正在加载 OCR 引擎 '+(i+1)+' / '+sources.length;try{let source=await externalScript(sources[i]);if(window.Tesseract){s.libOrigin=source.includes('unpkg')?'unpkg':'jsdelivr';return source}errors.push('未暴露 Tesseract: '+source)}catch(e){errors.push(e.message)}}
+ const local=/^(file:|edge:)/.test(location.protocol)||location.href.startsWith('edge://external-file');
+ throw new Error('无法载入 OCR 引擎。'+(local?'当前是本地文件查看器，请将 HTML 部署到 HTTPS 后通过 Safari / Chrome 访问。':'三个脚本来源均失败，请检查网络是否阻止了 unpkg、jsDelivr、cdnjs。')+' 详情：'+errors.join('；'));}
+async function getCV(){if(s.cv)return s.cv;if(s.cvLoad)return s.cvLoad;s.cvLoad=(async()=>{el('runtimeInfo').textContent='正在下载 OpenCV.js 视觉引擎…';await externalScript('https://docs.opencv.org/4.10.0/opencv.js');let api=await Promise.resolve(window.cv);for(let tries=0;tries<80&&!api?.Mat;tries++){await new Promise(r=>setTimeout(r,250));api=await Promise.resolve(window.cv)}if(!api?.Mat)throw Error('OpenCV.js 初始化超时');s.cv=api;el('cvLamp').classList.add('ready');el('runtimeInfo').textContent='OpenCV.js 已就绪 · OCR 按需加载。';return api})().catch(e=>{s.cvLoad=null;throw e});return s.cvLoad;}
+// ===== Screen detector v0.4 : dark-bezel / dark-display rectangle finder =====
+// Input: RGBA Uint8ClampedArray, width, height (already downscaled to ~320px long side).
+// Output: {quad:[{x,y}x4 normalized TL,TR,BR,BL], confidence, reason, inner:boolean} or null.
+function detectScreenQuad(rgba, W, H) {
+  const N = W * H;
+  // 1. luminance + 3x3 box blur
+  const raw = new Float32Array(N);
+  for (let i = 0; i < N; i++) { const k = i * 4; raw[i] = .299 * rgba[k] + .587 * rgba[k + 1] + .114 * rgba[k + 2]; }
+  const g = new Float32Array(N);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    let s = 0, n = 0;
+    for (let dy = -1; dy <= 1; dy++) { const yy = y + dy; if (yy < 0 || yy >= H) continue;
+      for (let dx = -1; dx <= 1; dx++) { const xx = x + dx; if (xx < 0 || xx >= W) continue; s += raw[yy * W + xx]; n++; } }
+    g[y * W + x] = s / n;
+  }
+  // 2. histogram, percentiles, Otsu
+  const hist = new Uint32Array(256);
+  for (let i = 0; i < N; i++) hist[Math.min(255, g[i] | 0)]++;
+  const pct = p => { let t = p * N, c = 0; for (let v = 0; v < 256; v++) { c += hist[v]; if (c >= t) return v; } return 255; };
+  let otsu = 0; { let sum = 0; for (let v = 0; v < 256; v++) sum += v * hist[v];
+    let sB = 0, wB = 0, best = -1; for (let v = 0; v < 256; v++) { wB += hist[v]; if (!wB) continue; const wF = N - wB; if (!wF) break;
+      sB += v * hist[v]; const mB = sB / wB, mF = (sum - sB) / wF, between = wB * wF * (mB - mF) * (mB - mF); if (between > best) { best = between; otsu = v; } } }
+  const uniq = arr => { const out = []; arr.sort((a, b) => a - b).forEach(t => { if (!out.length || t - out[out.length - 1] >= 6) out.push(t); }); return out; };
+  const darkTs = uniq([otsu, pct(.15), pct(.25), pct(.35), pct(.45), pct(.55), 40, 60, 80].filter(t => t >= 14 && t <= 150));
+  const brightTs = uniq([otsu, pct(.55), pct(.7), pct(.85)].filter(t => t >= 60 && t <= 235));
+
+  // helpers -------------------------------------------------------------
+  const lum = (x, y) => g[Math.max(0, Math.min(H - 1, Math.round(y))) * W + Math.max(0, Math.min(W - 1, Math.round(x)))];
+  const polyArea = p => Math.abs(p.reduce((v, q, i) => v + q.x * p[(i + 1) % 4].y - p[(i + 1) % 4].x * q.y, 0)) / 2;
+  function morph(mask, r, erode) { // square erode/dilate via integral image
+    const I = new Uint32Array((W + 1) * (H + 1));
+    for (let y = 0; y < H; y++) { let row = 0; for (let x = 0; x < W; x++) { row += mask[y * W + x]; I[(y + 1) * (W + 1) + x + 1] = I[y * (W + 1) + x + 1] + row; } }
+    const out = new Uint8Array(N);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const x1 = Math.max(0, x - r), x2 = Math.min(W, x + r + 1), y1 = Math.max(0, y - r), y2 = Math.min(H, y + r + 1);
+      const s = I[y2 * (W + 1) + x2] - I[y1 * (W + 1) + x2] - I[y2 * (W + 1) + x1] + I[y1 * (W + 1) + x1];
+      out[y * W + x] = erode ? (s === (x2 - x1) * (y2 - y1) ? 1 : 0) : (s > 0 ? 1 : 0);
+    }
+    return out;
+  }
+  function label(mask, minArea) {
+    const lab = new Int32Array(N), comps = []; let id = 0; const q = new Int32Array(N);
+    for (let k = 0; k < N; k++) { if (!mask[k] || lab[k]) continue; id++; let h = 0, t = 0; q[t++] = k; lab[k] = id;
+      let area = 0, x1 = W, y1 = H, x2 = 0, y2 = 0;
+      while (h < t) { const i = q[h++], x = i % W, y = (i / W) | 0; area++; if (x < x1) x1 = x; if (x > x2) x2 = x; if (y < y1) y1 = y; if (y > y2) y2 = y;
+        if (x > 0 && mask[i - 1] && !lab[i - 1]) { lab[i - 1] = id; q[t++] = i - 1; }
+        if (x < W - 1 && mask[i + 1] && !lab[i + 1]) { lab[i + 1] = id; q[t++] = i + 1; }
+        if (y > 0 && mask[i - W] && !lab[i - W]) { lab[i - W] = id; q[t++] = i - W; }
+        if (y < H - 1 && mask[i + W] && !lab[i + W]) { lab[i + W] = id; q[t++] = i + W; } }
+      if (area >= minArea) comps.push({ id, area, x1, y1, x2, y2 }); }
+    return { lab, comps };
+  }
+  // Fill holes inside the component's bbox. Bbox sides lying on the image border are NOT
+  // treated as "outside", so a display cut off by the camera frame still fills correctly.
+  function filledShape(lab, c) {
+    const bw = c.x2 - c.x1 + 1, bh = c.y2 - c.y1 + 1, reach = new Uint8Array(bw * bh), q = new Int32Array(bw * bh); let t = 0, h = 0;
+    const inC = (x, y) => lab[(y + c.y1) * W + x + c.x1] === c.id;
+    const seed = (x, y) => { const j = y * bw + x; if (!reach[j] && !inC(x, y)) { reach[j] = 1; q[t++] = j; } };
+    if (c.y1 > 0) for (let x = 0; x < bw; x++) seed(x, 0);
+    if (c.y2 < H - 1) for (let x = 0; x < bw; x++) seed(x, bh - 1);
+    if (c.x1 > 0) for (let y = 0; y < bh; y++) seed(0, y);
+    if (c.x2 < W - 1) for (let y = 0; y < bh; y++) seed(bw - 1, y);
+    while (h < t) { const j = q[h++], x = j % bw, y = (j / bw) | 0;
+      if (x > 0) seed(x - 1, y); if (x < bw - 1) seed(x + 1, y); if (y > 0) seed(x, y - 1); if (y < bh - 1) seed(x, y + 1); }
+    const fill = new Uint8Array(bw * bh); let area = 0;
+    for (let j = 0; j < bw * bh; j++) if (!reach[j]) { fill[j] = 1; area++; }
+    return { fill, bw, bh, ox: c.x1, oy: c.y1, area };
+  }
+  // Fit a quadrilateral to a binary shape (in bbox-local coords): extreme corners, then
+  // per-side total-least-squares line fits on boundary pixels, intersected.
+  function fitQuad(sh) {
+    const { fill, bw, bh, ox, oy } = sh, pts = [];
+    const F = (x, y) => x >= 0 && y >= 0 && x < bw && y < bh && fill[y * bw + x];
+    for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) if (F(x, y) && (!F(x - 1, y) || !F(x + 1, y) || !F(x, y - 1) || !F(x, y + 1))) pts.push({ x: x + ox, y: y + oy });
+    if (pts.length < 20) return null;
+    // Convex hull (monotone chain): notches made by dark game content at the picture edge,
+    // or objects in front of the TV, no longer bend the fitted sides.
+    const P = pts.slice().sort((a, b) => a.x - b.x || a.y - b.y), cr = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x), lo = [], up = [];
+    for (const p of P) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); }
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop(); up.push(p); }
+    const hull = lo.slice(0, -1).concat(up.slice(0, -1)); if (hull.length < 3) return null;
+    let hullArea = 0; for (let i = 0; i < hull.length; i++) { const a = hull[i], b = hull[(i + 1) % hull.length]; hullArea += a.x * b.y - b.x * a.y; } hullArea = Math.abs(hullArea) / 2 + pts.length / 2;
+    pts.length = 0;
+    for (let i = 0; i < hull.length; i++) { const a = hull[i], b = hull[(i + 1) % hull.length], L = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y)));
+      for (let k = 0; k < L; k++) pts.push({ x: a.x + (b.x - a.x) * k / L, y: a.y + (b.y - a.y) * k / L }); }
+    let tl = pts[0], tr = pts[0], br = pts[0], bl = pts[0];
+    for (const p of pts) { if (p.x + p.y < tl.x + tl.y) tl = p; if (p.x + p.y > br.x + br.y) br = p; if (p.x - p.y > tr.x - tr.y) tr = p; if (p.x - p.y < bl.x - bl.y) bl = p; }
+    let corners = [tl, tr, br, bl];
+    const segDist = (p, a, b) => { const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy || 1; let u = ((p.x - a.x) * dx + (p.y - a.y) * dy) / L; u = Math.max(0, Math.min(1, u)); return Math.hypot(p.x - a.x - u * dx, p.y - a.y - u * dy); };
+    const fitLine = ps => { if (ps.length < 6) return null; let mx = 0, my = 0; for (const p of ps) { mx += p.x; my += p.y; } mx /= ps.length; my /= ps.length;
+      let sxx = 0, syy = 0, sxy = 0; for (const p of ps) { const dx = p.x - mx, dy = p.y - my; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; }
+      const th = .5 * Math.atan2(2 * sxy, sxx - syy); return { mx, my, dx: Math.cos(th), dy: Math.sin(th) }; };
+    const lineDist = (p, l) => Math.abs((p.x - l.mx) * l.dy - (p.y - l.my) * l.dx);
+    // Robust side fit: the line supported by the most points wins, so a diagonal hull cut at a
+    // dark corner (or a bulge) cannot tilt the side; then least-squares on its inliers.
+    const ransacLine = ps => { if (ps.length < 6) return null; let best = null, bestN = -1; const n = ps.length, step = Math.max(1, Math.floor(n / 24));
+      for (let i = 0; i < n; i += step) for (let j = i + Math.max(3, n >> 2); j < n; j += step) { const a = ps[i], b = ps[j], L = Math.hypot(b.x - a.x, b.y - a.y); if (L < 3) continue;
+        const l = { mx: a.x, my: a.y, dx: (b.x - a.x) / L, dy: (b.y - a.y) / L }; let c = 0; for (const p of ps) if (lineDist(p, l) < 1.2) c++; if (c > bestN) { bestN = c; best = l; } }
+      if (!best) return fitLine(ps); const inl = ps.filter(p => lineDist(p, best) < 1.5); return inl.length >= 6 ? fitLine(inl) : best; };
+    const inter = (a, b) => { const den = a.dx * b.dy - a.dy * b.dx; if (Math.abs(den) < 1e-6) return null; const t = ((b.mx - a.mx) * b.dy - (b.my - a.my) * b.dx) / den; return { x: a.mx + t * a.dx, y: a.my + t * a.dy }; };
+    for (let iter = 0; iter < 2; iter++) {
+      const groups = [[], [], [], []];
+      for (const p of pts) { let bi = 0, bd = 1e9; for (let s = 0; s < 4; s++) { const d = segDist(p, corners[s], corners[(s + 1) % 4]); if (d < bd) { bd = d; bi = s; } }
+        const L = Math.hypot(corners[(bi + 1) % 4].x - corners[bi].x, corners[(bi + 1) % 4].y - corners[bi].y);
+        if (bd <= Math.max(2.5, L * .06)) groups[bi].push(p); }
+      // trim 12% near the corners (rounded/occluded corners pull fits)
+      const lines = groups.map((grp, s) => { const a = corners[s], b = corners[(s + 1) % 4], dx = b.x - a.x, dy = b.y - a.y, L2 = dx * dx + dy * dy || 1;
+        let ps = grp.filter(p => { const u = ((p.x - a.x) * dx + (p.y - a.y) * dy) / L2; return u > .12 && u < .88; });
+        return ransacLine(ps); });
+      if (lines.some(l => !l)) break;
+      const nc = [inter(lines[3], lines[0]), inter(lines[0], lines[1]), inter(lines[1], lines[2]), inter(lines[2], lines[3])];
+      if (nc.some(c => !c || !isFinite(c.x) || c.x < -W * .15 || c.x > W * 1.15 || c.y < -H * .15 || c.y > H * 1.15)) break;
+      corners = nc;
+    }
+    const out = corners.map(c => ({ x: Math.max(0, Math.min(W, c.x)), y: Math.max(0, Math.min(H, c.y)) })); out.hullArea = hullArea; return out;
+  }
+  // Evaluate how a quad sits in the image: edge contrast along each side, border sides, aspect.
+  function evalQuad(q, polarity) {
+    const cx = (q[0].x + q[1].x + q[2].x + q[3].x) / 4, cy = (q[0].y + q[1].y + q[2].y + q[3].y) / 4;
+    let contrasts = [], borderSides = 0;
+    for (let s = 0; s < 4; s++) { const a = q[s], b = q[(s + 1) % 4], L = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+      let nx = (b.y - a.y) / L, ny = -(b.x - a.x) / L; const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2; if ((mx - cx) * nx + (my - cy) * ny < 0) { nx = -nx; ny = -ny; }
+      const d = Math.max(2, Math.min(W, H) * .02), vals = [], out = []; let outside = 0;
+      for (let k = 1; k < 20; k++) { const u = .1 + .8 * k / 20, px = a.x + (b.x - a.x) * u, py = a.y + (b.y - a.y) * u, ox = px + nx * d, oy = py + ny * d;
+        if (ox < 0 || oy < 0 || ox > W - 1 || oy > H - 1) { outside++; continue; } vals.push(polarity * (lum(ox, oy) - lum(px - nx * d, py - ny * d))); }
+      if (outside > 12) { borderSides++; continue; }
+      vals.sort((x, y) => x - y); contrasts.push(vals[(vals.length * .5) | 0] || 0); }
+    const top = Math.hypot(q[1].x - q[0].x, q[1].y - q[0].y), bot = Math.hypot(q[2].x - q[3].x, q[2].y - q[3].y), lef = Math.hypot(q[3].x - q[0].x, q[3].y - q[0].y), rig = Math.hypot(q[2].x - q[1].x, q[2].y - q[1].y);
+    const aspect = (top + bot) / Math.max(1, lef + rig);
+    const minContrast = contrasts.length ? Math.min(...contrasts) : 0, meanContrast = contrasts.length ? contrasts.reduce((a, b) => a + b, 0) / contrasts.length : 0;
+    return { cx: cx / W, cy: cy / H, borderSides, minContrast, meanContrast, aspect };
+  }
+  // Sub-pixel bilinear luminance.
+  const lumB = (x, y) => { x = Math.max(0, Math.min(W - 1.001, x)); y = Math.max(0, Math.min(H - 1.001, y)); const x0 = x | 0, y0 = y | 0, fx = x - x0, fy = y - y0, i = y0 * W + x0;
+    return g[i] * (1 - fx) * (1 - fy) + g[i + 1] * fx * (1 - fy) + g[i + W] * (1 - fx) * fy + g[i + W + 1] * fx * fy; };
+  // Edge refinement: each side is re-placed on the straight line with the strongest consistent
+  // brightness step (inside vs outside). Steps are compressed (square root), so a stretch where the game shows dark
+  // content at its border (weak step) still votes for the true edge instead of bending the side.
+  function refineEdges(q, inBright, tDark) {
+    // black level = median luminance just on the dark side of the coarse outline
+    const ring = []; { const cx0 = (q[0].x + q[1].x + q[2].x + q[3].x) / 4, cy0 = (q[0].y + q[1].y + q[2].y + q[3].y) / 4;
+      for (let s = 0; s < 4; s++) for (let k = 1; k < 16; k++) { const a = q[s], b = q[(s + 1) % 4], u = k / 16, x = a.x + (b.x - a.x) * u, y = a.y + (b.y - a.y) * u, dx = x - cx0, dy = y - cy0, dl = Math.hypot(dx, dy) || 1, off = inBright ? 4 : -4;
+        const px = x + dx / dl * off, py = y + dy / dl * off; if (px > 0 && py > 0 && px < W - 1 && py < H - 1) ring.push(lumB(px, py)); } }
+    ring.sort((a, b) => a - b); const black = ring.length ? ring[ring.length >> 1] : tDark, darkMax = Math.min(tDark * 1.4 + 6, black * 1.4 + 14);
+    const sign = inBright ? 1 : -1, cx = (q[0].x + q[1].x + q[2].x + q[3].x) / 4, cy = (q[0].y + q[1].y + q[2].y + q[3].y) / 4, lines = [];
+    for (let s = 0; s < 4; s++) {
+      const a = q[s], b = q[(s + 1) % 4], L = Math.hypot(b.x - a.x, b.y - a.y) || 1; let nx = (b.y - a.y) / L, ny = -(b.x - a.x) / L;
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2; if ((mx - cx) * nx + (my - cy) * ny < 0) { nx = -nx; ny = -ny; }
+      const onBorder = [a, b].every(p => p.x < 1.5 || p.y < 1.5 || p.x > W - 2.5 || p.y > H - 2.5) || (Math.abs(a.x - b.x) < 2 && (a.x < 2 || a.x > W - 3)) || (Math.abs(a.y - b.y) < 2 && (a.y < 2 || a.y > H - 3));
+      let A = { x: a.x, y: a.y }, B = { x: b.x, y: b.y };
+      if (!onBorder) {
+        const R = Math.max(3, Math.min(10, L * .08)), score = (pa, pb) => { let sum = 0; for (let k = 0; k <= 32; k++) { const u = .06 + .88 * k / 32, x = pa.x + (pb.x - pa.x) * u, y = pa.y + (pb.y - pa.y) * u;
+            const vi = lumB(x - nx * 1.2, y - ny * 1.2), vo = lumB(x + nx * 1.2, y + ny * 1.2), d = sign * (vi - vo);
+            if ((inBright ? vo : vi) > darkMax) { sum -= .5; continue; }   // the black side must really be black: ignores edges inside the picture
+            sum += d > 0 ? Math.sqrt(d) : -.6 * Math.sqrt(-d); } return sum; };
+        for (const [range, step] of [[R, 1], [1.2, .3]]) { let best = -1e9, bo = [0, 0];
+          for (let oa = -range; oa <= range + 1e-6; oa += step) for (let ob = -range; ob <= range + 1e-6; ob += step) {
+            const pa = { x: A.x + nx * oa, y: A.y + ny * oa }, pb = { x: B.x + nx * ob, y: B.y + ny * ob }, sc = score(pa, pb) - .15 * Math.abs(oa - ob);
+            if (sc > best) { best = sc; bo = [oa, ob]; } }
+          A = { x: A.x + nx * bo[0], y: A.y + ny * bo[0] }; B = { x: B.x + nx * bo[1], y: B.y + ny * bo[1] }; }
+      }
+      lines.push({ a: A, b: B });
+    }
+    const inter = (l1, l2) => { const d1x = l1.b.x - l1.a.x, d1y = l1.b.y - l1.a.y, d2x = l2.b.x - l2.a.x, d2y = l2.b.y - l2.a.y, den = d1x * d2y - d1y * d2x; if (Math.abs(den) < 1e-9) return null;
+      const t = ((l2.a.x - l1.a.x) * d2y - (l2.a.y - l1.a.y) * d2x) / den; return { x: l1.a.x + t * d1x, y: l1.a.y + t * d1y }; };
+    const out = [inter(lines[3], lines[0]), inter(lines[0], lines[1]), inter(lines[1], lines[2]), inter(lines[2], lines[3])];
+    if (out.some((c, k) => !c || Math.hypot(c.x - q[k].x, c.y - q[k].y) > Math.max(W, H) * .06)) return q;
+    return out.map(c => ({ x: Math.max(0, Math.min(W, c.x)), y: Math.max(0, Math.min(H, c.y)) }));
+  }
+  // 3. scan thresholds ---------------------------------------------------
+  const cands = [];
+  const fitStats = (sh, q) => { const qa = polyArea(q), ha = q.hullArea || sh.area; return { qa, rect: Math.min(ha / qa, qa / ha), solid: Math.min(1, sh.area / ha), fill: Math.min(sh.area / qa, qa / sh.area) }; };
+  const tryMask = (mask, polarity, t) => {
+    const { lab, comps } = label(mask, N * .02);
+    for (const c of comps) {
+      if ((c.x2 - c.x1 + 1) * (c.y2 - c.y1 + 1) > N * .97) continue;
+      const sh = filledShape(lab, c);
+      if (polarity > 0) findHoles(lab, c, sh, t);       // bright picture surrounded by black
+      if (c.area < N * .04 || sh.area < N * .05 || sh.area > N * .9) continue;
+      const q = fitQuad(sh); if (!q) continue; const st = fitStats(sh, q); if (st.qa < N * .05 || st.rect < .82 || st.solid < .72) continue;
+      const ev = evalQuad(q, polarity);
+      if (ev.borderSides > 2 || ev.aspect < .85 || ev.aspect > 2.9 || ev.minContrast < 10) continue;
+      const area = st.qa / N, aspPen = Math.max(0, 1.2 - ev.aspect) + Math.max(0, ev.aspect - 2.4);
+      const score = 1.6 * (st.rect - .82) / .18 - 3 * Math.max(0, .9 - st.solid) - 5 * Math.max(0, .95 - st.fill) + 1.1 * Math.min(area, .55) + Math.min(ev.meanContrast, 70) / 70 + Math.min(ev.minContrast, 40) / 80
+        - .22 * ev.borderSides - .9 * Math.hypot(ev.cx - .5, ev.cy - .5) - 1.2 * aspPen - (polarity < 0 ? .45 : 0);
+      cands.push({ quad: q, score, rect: st.rect, area, ev, t, kind: polarity > 0 ? 'dark' : 'bright' });
+    }
+  };
+  // Holes of a dark component = regions fully enclosed by black (bezel, pillar/letterbox bars).
+  // A bright, rectangular, high-contrast hole is the active game picture itself.
+  function findHoles(lab, c, sh, t) {
+    if (sh.area - c.area < N * .03) return;
+    const hm = new Uint8Array(N);
+    for (let y = 0; y < sh.bh; y++) for (let x = 0; x < sh.bw; x++) { const i = (y + sh.oy) * W + x + sh.ox; if (sh.fill[y * sh.bw + x] && lab[i] !== c.id) hm[i] = 1; }
+    const { lab: l2, comps } = label(hm, N * .03);
+    for (const h of comps) {
+      const s2 = filledShape(l2, h), q = fitQuad(s2); if (!q) continue; const st = fitStats(s2, q);
+      if (st.qa < N * .03 || st.qa > N * .85 || st.rect < .88 || st.solid < .6) continue;
+      const ev = evalQuad(q, -1);                     // inside must be brighter than the black around it
+      if (ev.borderSides > 2 || ev.aspect < .95 || ev.aspect > 2.4 || ev.minContrast < 15) continue;
+      const area = st.qa / N;
+      const score = .6 + 1.6 * (st.rect - .82) / .18 - 1.5 * Math.max(0, .85 - st.solid) - 2 * Math.max(0, .9 - st.fill) + 1.1 * Math.min(area * 1.6, .55) + Math.min(ev.meanContrast, 70) / 70 + Math.min(ev.minContrast, 40) / 80
+        - .22 * ev.borderSides - .6 * Math.hypot(ev.cx - .5, ev.cy - .5);
+      cands.push({ quad: q, score, rect: st.rect, area, ev, t, kind: 'hole' });
+    }
+  }
+  for (const t of darkTs) { const m = new Uint8Array(N); for (let i = 0; i < N; i++) m[i] = g[i] < t ? 1 : 0; tryMask(morph(morph(m, 1, true), 1, false), 1, t); tryMask(morph(morph(m, 1, false), 1, true), 1, t + .5); }
+  for (const t of brightTs) { const m = new Uint8Array(N); for (let i = 0; i < N; i++) m[i] = g[i] > t ? 1 : 0; tryMask(morph(morph(m, 1, true), 1, false), -1, t); }
+  if (!cands.length) return null;
+  cands.sort((a, b) => b.score - a.score);
+  // consensus: a quad found at many thresholds/variants is more trustworthy than one lucky mask
+  const near = (a, b) => a.quad.every((p, k) => Math.hypot(p.x - b.quad[k].x, p.y - b.quad[k].y) < Math.max(W, H) * .035);
+  for (const c of cands) c.support = cands.reduce((v, o) => v + (near(c, o) ? Math.max(0, o.score) : 0), 0);
+  const top = cands.reduce((b, c) => c.support > b.support ? c : b, cands[0]);
+  const best = cands.filter(c => near(c, top)).reduce((b, c) => c.score > b.score ? c : b, top); best.quad = refineEdges(best.quad, best.kind !== 'dark', best.kind === 'bright' ? Math.max(30, best.t * .6) : best.t);
+  // stability bonus: how many other thresholds found (almost) the same quad
+  const agree = cands.filter(c => c !== best && c.quad.every((p, k) => Math.hypot(p.x - best.quad[k].x, p.y - best.quad[k].y) < Math.max(W, H) * .04)).length;
+  const confidence = Math.max(0, Math.min(.99, .35 + best.score * .18 + Math.min(agree, 4) * .05));
+  return {
+    quad: best.quad.map(p => ({ x: p.x / W, y: p.y / H })), confidence,
+    kind: best.kind, reason: best.kind === 'hole' ? '黑边包围的游戏画面' : best.kind === 'dark' ? '深色屏幕／黑边矩形' : '亮色显示矩形',
+    debug: { score: best.score, rect: best.rect, area: best.area, t: best.t, agree, ev: best.ev, n: cands.length }
+  };
+}
+
+function smallFrame(maxSide=320){const src=curSrc();if(!src)return null;const sc=Math.min(1,maxSide/Math.max(src.w,src.h)),c=document.createElement('canvas');c.width=Math.max(16,Math.round(src.w*sc));c.height=Math.max(16,Math.round(src.h*sc));const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(src.elem,0,0,c.width,c.height);return{w:c.width,h:c.height,data:x.getImageData(0,0,c.width,c.height).data};}
+function quadShift(a,b){if(!a||!b)return 1;let m=0;for(let i=0;i<4;i++)m=Math.max(m,Math.hypot(a[i].x-b[i].x,a[i].y-b[i].y));return m;}
+function setLockLabel(t){el('frameLabel').textContent=t;}
+async function detectScreen(silent=false){if(s.processing)return false;if(!curSrc()){if(!silent)notify('请先上传照片或打开摄像头。','error');return false}
+ s.processing=true;el('detectBtn').disabled=true;
+ try{const f=smallFrame(320),res=f&&detectScreenQuad(f.data,f.w,f.h);
+  if(!res||res.confidence<.45){s.lockMiss=(s.lockMiss||0)+1;if(s.quad&&s.lockMiss>=3)setLockLabel('暂未看到屏幕 · 保持上次锁定');if(silent)return false;throw Error('暂未找到可信的屏幕边界。请让电视的上下边缘（深色屏幕与墙面/柜子的交界）完整出现在取景框中，保持稳定后再试。')}
+  s.lockMiss=0;let q=res.quad;const shift=quadShift(q,s.quad);
+  if(silent&&s.quad){
+   if(shift<.012){setLockLabel('已锁定 · '+res.reason+' · '+Math.round(res.confidence*100)+'%');return true}
+   if(shift>.08){if(!s.pendingQuad||quadShift(q,s.pendingQuad)>.04){s.pendingQuad=q;return false}}
+   else q=q.map((p,i)=>({x:s.quad[i].x*.4+p.x*.6,y:s.quad[i].y*.4+p.y*.6}));
+  }
+  s.pendingQuad=null;s.quad=q;s.cornerMode='auto';setLockLabel('已锁定 · '+res.reason+' · '+Math.round(res.confidence*100)+'%');
+  await rectify();
+  if(silent&&s.roiManual&&s.roiNorm)applyROI({x:s.roiNorm.x*s.corrected.width,y:s.roiNorm.y*s.corrected.height,w:s.roiNorm.w*s.corrected.width,h:s.roiNorm.h*s.corrected.height},s.boxIndex,true);
+  else{s.roiManual=false;await findTextBoxes(silent)}
+  if(!silent)notify('自动定位完成：'+res.reason+'（置信度 '+Math.round(res.confidence*100)+'%）。若绿色框不准，可拖动角点修正。','ok');return true}
+ catch(e){if(!silent)notify('自动定位：'+e.message,'error');return false}
+ finally{s.processing=false;el('detectBtn').disabled=false}}
+function startTracking(){if(s.trackingTimer)clearInterval(s.trackingTimer);s.trackingTimer=setInterval(async()=>{if(s.source!=='camera'||!el('autoLock').checked||s.cornerMode==='manual'||s.processing||document.visibilityState!=='visible')return;await detectScreen(true)},1200)}
+el('autoLock').onchange=()=>{if(el('autoLock').checked){s.cornerMode='auto';if(curSrc())detectScreen(false);startTracking();notify('已开启自动锁定与追踪。','ok')}else{s.cornerMode='manual';notify('已暂停自动追踪；现有角点保持不动。')}};
+el('detectBtn').onclick=()=>{s.cornerMode='auto';s.pendingQuad=null;detectScreen(false)};
+function cvWarp(frame,quad,W,H,api){let mats=[],save=m=>(mats.push(m),m);try{let src=save(api.imread(frame)),dst=save(new api.Mat()),srcPts=save(api.matFromArray(4,1,api.CV_32FC2,quad.flatMap(p=>[p.x*frame.width,p.y*frame.height]))),dstPts=save(api.matFromArray(4,1,api.CV_32FC2,[0,0,W-1,0,W-1,H-1,0,H-1])),M=save(api.getPerspectiveTransform(srcPts,dstPts));api.warpPerspective(src,dst,M,new api.Size(W,H),api.INTER_LINEAR,api.BORDER_CONSTANT,new api.Scalar());const out=document.createElement('canvas');out.width=W;out.height=H;api.imshow(out,dst);return out}finally{for(let i=mats.length-1;i>=0;i--)mats[i].delete()}}
+function homography(points){let rows=[];for(let i=0;i<4;i++){let[u,v]=[[0,0],[1,0],[1,1],[0,1]][i],p=points[i];rows.push([u,v,1,0,0,0,-u*p.x,-v*p.x,p.x]);rows.push([0,0,0,u,v,1,-u*p.y,-v*p.y,p.y])}for(let j=0;j<8;j++){let ix=j;for(let k=j+1;k<8;k++)if(Math.abs(rows[k][j])>Math.abs(rows[ix][j]))ix=k;[rows[j],rows[ix]]=[rows[ix],rows[j]];let d=rows[j][j];if(Math.abs(d)<1e-10)throw Error('所选四角不能形成有效的四边形');for(let n=j;n<9;n++)rows[j][n]/=d;for(let k=0;k<8;k++)if(k!==j){let mult=rows[k][j];for(let n=j;n<9;n++)rows[k][n]-=mult*rows[j][n]}}return rows.map(r=>r[8]);}
+// Pure JavaScript projective warp: keeps manual perspective correction functional if the OpenCV CDN is unavailable.
+function jsWarp(frame,quad,W,H){let points=quad.map(p=>({x:p.x*frame.width,y:p.y*frame.height})),h=homography(points),src=frame.getContext('2d').getImageData(0,0,frame.width,frame.height),out=document.createElement('canvas');out.width=W;out.height=H;let dst=out.getContext('2d',{willReadFrequently:true}),image=dst.createImageData(W,H),S=src.data,D=image.data,sw=frame.width,sh=frame.height;for(let y=0;y<H;y++){let v=y/(H-1);for(let x=0;x<W;x++){let u=x/(W-1),z=h[6]*u+h[7]*v+1,sx=(h[0]*u+h[1]*v+h[2])/z,sy=(h[3]*u+h[4]*v+h[5])/z,ix=Math.max(0,Math.min(sw-1,Math.round(sx))),iy=Math.max(0,Math.min(sh-1,Math.round(sy))),si=(iy*sw+ix)*4,di=(y*W+x)*4;D[di]=S[si];D[di+1]=S[si+1];D[di+2]=S[si+2];D[di+3]=255}}dst.putImageData(image,0,0);return out}
+async function rectify(){if(!s.quad||!curSrc())return false;let frame=snapFrame(),quad=s.quad;let pts=quad.map(p=>({x:p.x*frame.width,y:p.y*frame.height})),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),width=(dist(pts[0],pts[1])+dist(pts[3],pts[2]))/2,height=(dist(pts[0],pts[3])+dist(pts[1],pts[2]))/2;if(width<90||height<70)throw Error('显示区域太小，重新选择四个角。');const asp=width/height,std=[4/3,16/9,3/2,10/9].reduce((b,a)=>Math.abs(Math.log(a/asp))<Math.abs(Math.log(b/asp))?a:b);if(Math.abs(Math.log(std/asp))<.09)width=height*std;s.rectAspect=width/height;let scale=Math.min(1.5,1150/width,850/height),W=Math.max(120,Math.round(width*scale)),H=Math.max(120,Math.round(height*scale));s.frame=frame;try{s.corrected=s.cv?cvWarp(frame,quad,W,H,s.cv):jsWarp(frame,quad,W,H)}catch(e){s.corrected=jsWarp(frame,quad,W,H)}s.boxes=[];s.roi=null;drawRectified();el('rectInfo').textContent=W+'×'+H+' px · '+(Math.abs(s.rectAspect-4/3)<.01?'4:3':Math.abs(s.rectAspect-16/9)<.01?'16:9':Math.abs(s.rectAspect-3/2)<.01?'3:2':Math.abs(s.rectAspect-10/9)<.01?'10:9':s.rectAspect.toFixed(2)+':1');return true}
+function applyROI(b,index=-1,manual=false){s.roi={x:Math.max(0,b.x),y:Math.max(0,b.y),w:Math.min(s.corrected.width-b.x,b.w),h:Math.min(s.corrected.height-b.y,b.h)};s.boxIndex=index;s.roiManual=manual;s.roiNorm={x:s.roi.x/s.corrected.width,y:s.roi.y/s.corrected.height,w:s.roi.w/s.corrected.width,h:s.roi.h/s.corrected.height};drawRectified();}
+function drawRectified(){if(!s.corrected){rectified.width=880;rectified.height=660;rctx.fillStyle='#06150c';rctx.fillRect(0,0,rectified.width,rectified.height);rctx.textAlign='center';rctx.font='16px system-ui';rctx.fillStyle='#8bac98';rctx.fillText('等待自动识别与透视校正',440,330);return}rectified.width=s.corrected.width;rectified.height=s.corrected.height;rctx.drawImage(s.corrected,0,0);if(s.roi){let r=s.roi;rctx.save();rctx.strokeStyle='#efcc68';rctx.lineWidth=Math.max(2,rectified.width/320);rctx.setLineDash([12,7]);rctx.strokeRect(r.x,r.y,r.w,r.h);rctx.setLineDash([]);rctx.fillStyle='#2a2208ba';rctx.fillRect(r.x,r.y,Math.min(r.w,124),25);rctx.font='14px system-ui';rctx.fillStyle='#f3dfa5';rctx.fillText('OCR 文字区域',r.x+5,r.y+18);rctx.restore();}if(s.editROI){let a=s.editROI,r={x:Math.min(a.x,a.ex),y:Math.min(a.y,a.ey),w:Math.abs(a.x-a.ex),h:Math.abs(a.y-a.ey)};rctx.strokeStyle='#89efa5';rctx.lineWidth=3;rctx.strokeRect(r.x,r.y,r.w,r.h)}}
+rectified.addEventListener('pointerdown',e=>{if(!s.corrected)return;let p=viewCoords(e,rectified);s.editROI={x:p.x,y:p.y,ex:p.x,ey:p.y};rectified.setPointerCapture(e.pointerId)});
+rectified.addEventListener('pointermove',e=>{if(!s.editROI)return;let p=viewCoords(e,rectified);s.editROI.ex=p.x;s.editROI.ey=p.y;drawRectified()});
+rectified.addEventListener('pointerup',e=>{if(!s.editROI)return;let a=s.editROI;s.editROI=null;let b={x:Math.min(a.x,a.ex),y:Math.min(a.y,a.ey),w:Math.abs(a.x-a.ex),h:Math.abs(a.y-a.ey)};if(b.w>24&&b.h>18){applyROI(b,-1,true);notify('已按你手动框选的区域设置 OCR 识别范围。','ok')}else drawRectified()});
+rectified.addEventListener('pointercancel',()=>{s.editROI=null;drawRectified()});
+function findTextCV(img,api){let w=img.width,h=img.height,ms=[],save=m=>(ms.push(m),m),out=[];try{let src=save(api.imread(img)),gray=save(new api.Mat());api.cvtColor(src,gray,api.COLOR_RGBA2GRAY);let blurred=save(new api.Mat());api.GaussianBlur(gray,blurred,new api.Size(5,5),0);
+ for(let threshold of [195,210,85]){let mask=save(new api.Mat()),close=save(new api.Mat()),open=save(new api.Mat()),k=save(api.getStructuringElement(api.MORPH_RECT,new api.Size(Math.max(9,Math.round(w*.029)|1),Math.max(7,Math.round(h*.023)|1)))),k2=save(api.getStructuringElement(api.MORPH_RECT,new api.Size(7,7)));api.threshold(blurred,mask,threshold,255,threshold===85?api.THRESH_BINARY_INV:api.THRESH_BINARY);api.morphologyEx(mask,close,api.MORPH_CLOSE,k);api.morphologyEx(close,open,api.MORPH_OPEN,k2);let cs=save(new api.MatVector()),hi=save(new api.Mat());api.findContours(open,cs,hi,api.RETR_EXTERNAL,api.CHAIN_APPROX_SIMPLE);
+ for(let j=0;j<cs.size();j++){let contour=cs.get(j),a=api.contourArea(contour),r=api.boundingRect(contour);contour.delete();let frac=a/(w*h),ratio=r.width/Math.max(1,r.height);if(frac<.018||frac>.64||ratio<1.35||ratio>10||r.width<w*.24||r.height<h*.07)continue;let box={x:Math.max(0,r.x-9),y:Math.max(0,r.y-9),w:Math.min(w-r.x+9,r.width+18),h:Math.min(h-r.y+9,r.height+18)};let score=frac*1.8+(Math.min(ratio,5)/5)*.19+Math.min(1,r.width/w)*.3+(r.y/h>.24?.08:0)+(threshold===210?.1:0);out.push({box,score,method:'panel'})}}
+ }finally{for(let i=ms.length-1;i>=0;i--)try{ms[i].delete()}catch(e){}}return out}
+function findTextJS(img){
+ // Browser-only fallback: detect large bright dialogue panels by morphological closing
+ // and connected components, rather than using an arbitrary bottom-screen crop.
+ const w=img.width,h=img.height,step=4,gW=Math.ceil(w/step),gH=Math.ceil(h/step),pixels=img.getContext('2d').getImageData(0,0,w,h).data;
+ const candidates=[];
+ function filter(grid,rx,ry,dilate){const out=new Uint8Array(grid.length);for(let y=0;y<gH;y++)for(let x=0;x<gW;x++){let match=dilate?0:1;outer:for(let yy=Math.max(0,y-ry);yy<=Math.min(gH-1,y+ry);yy++)for(let xx=Math.max(0,x-rx);xx<=Math.min(gW-1,x+rx);xx++){if(!!grid[yy*gW+xx]===!!dilate){match=dilate?1:0;break outer}}out[y*gW+x]=match}return out}
+ for(let cutoff of [190,210]){
+   let grid=new Uint8Array(gW*gH);
+   for(let y=0;y<gH;y++)for(let x=0;x<gW;x++){
+     const sx=Math.min(w-1,x*step+2),sy=Math.min(h-1,y*step+2),i=(sy*w+sx)*4;
+     grid[y*gW+x]=(.299*pixels[i]+.587*pixels[i+1]+.114*pixels[i+2])>cutoff?1:0;
+   }
+   grid=filter(filter(grid,3,2,true),3,2,false);
+   grid=filter(filter(grid,1,1,false),1,1,true);
+   let seen=new Uint8Array(grid.length);
+   for(let k=0;k<grid.length;k++){
+     if(!grid[k]||seen[k])continue;
+     let todo=[k],index=0,count=0,minX=gW,minY=gH,maxX=0,maxY=0;seen[k]=1;
+     while(index<todo.length){let i=todo[index++],x=i%gW,y=Math.floor(i/gW);count++;minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
+       for(let d of [-1,1,-gW,gW]){let j=i+d;if(j<0||j>=grid.length||seen[j]||!grid[j])continue;let jx=j%gW,jy=Math.floor(j/gW);if(Math.abs(jx-x)+Math.abs(jy-y)!==1)continue;seen[j]=1;todo.push(j)}
+     }
+     const x=minX*step,y=minY*step,bw=Math.min(w-x,(maxX-minX+1)*step),bh=Math.min(h-y,(maxY-minY+1)*step),fraction=count/(gW*gH),aspect=bw/Math.max(bh,1);
+     if(fraction<.018||fraction>.58||aspect<1.35||aspect>11||bw<w*.25||bh<h*.065)continue;
+     let pad=Math.max(6,Math.round(w*.01)),box={x:Math.max(0,x-pad),y:Math.max(0,y-pad),w:Math.min(w-Math.max(0,x-pad),bw+pad*2),h:Math.min(h-Math.max(0,y-pad),bh+pad*2)};
+     candidates.push({box,score:fraction*2+Math.min(aspect,5)*.035+(y/h>.2?.08:0),method:'browser panel'});
+   }
+ }
+ return candidates;
+}
+async function findTextBoxes(quiet=false){if(quiet!==true)quiet=false;if(!s.corrected)return notify('请先检测屏幕并校正。','error');const W=s.corrected.width,H=s.corrected.height;const mode=el('roiMode').value;
+ if(mode==='full')return applyROI({x:0,y:0,w:W,h:H});if(mode==='bottom')return applyROI({x:W*.03,y:H*.56,w:W*.94,h:H*.40});
+ let boxes=[];try{boxes=s.cv?findTextCV(s.corrected,s.cv):findTextJS(s.corrected)}catch(e){boxes=findTextJS(s.corrected)}boxes.sort((a,b)=>b.score-a.score);let unique=[];for(let item of boxes){let b=item.box,duplicate=unique.some(it=>{let a=it.box,ix=Math.max(0,Math.min(a.x+a.w,b.x+b.w)-Math.max(a.x,b.x)),iy=Math.max(0,Math.min(a.y+a.h,b.y+b.h)-Math.max(a.y,b.y));return ix*iy/Math.min(a.w*a.h,b.w*b.h)>.77});if(!duplicate)unique.push(item);if(unique.length>=8)break;}s.boxes=unique;if(unique.length){applyROI(unique[0].box,0);if(!quiet)notify('找到 '+unique.length+' 个可能的文字容器。若当前框错误，可点“下一个候选框”或直接在下方画面上拖动。','ok')}else{applyROI({x:W*.035,y:H*.55,w:W*.93,h:H*.40});if(!quiet)notify('未找到明确的文字框，已临时选择画面下部；请手动拖选需要识别的位置。')}}
+el('textBtn').onclick=()=>findTextBoxes();el('nextBtn').onclick=()=>{if(!s.corrected)return;if(!s.boxes.length)return notify('还没有自动候选框。先点击自动寻找文字框。');applyROI(s.boxes[(s.boxIndex+1)%s.boxes.length].box,(s.boxIndex+1)%s.boxes.length,true);notify('已切换至候选框 '+(s.boxIndex+1)+' / '+s.boxes.length);};el('fullBtn').onclick=()=>{if(s.corrected)applyROI({x:0,y:0,w:s.corrected.width,h:s.corrected.height},-1,true)};el('roiMode').onchange=()=>findTextBoxes();
+el('reCaptureBtn').onclick=async()=>{if(!s.quad)return notify('请先确定屏幕四角。','error');try{await rectify();await findTextBoxes();notify('已重新采集当前画面。','ok')}catch(e){notify(e.message,'error')}};
+function OCRCanvas(){let im=s.corrected,r=s.roi;if(!im)throw Error('请先执行透视校正');if(!r)r={x:0,y:0,w:im.width,h:im.height};let scale=Math.min(2.4,1800/r.w,1200/r.h),c=document.createElement('canvas');c.width=Math.max(40,Math.round(r.w*scale));c.height=Math.max(30,Math.round(r.h*scale));let x=c.getContext('2d',{willReadFrequently:true});x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(im,r.x,r.y,r.w,r.h,0,0,c.width,c.height);let mode=el('preprocess').value;if(mode==='native')return c;
+ let pixels=x.getImageData(0,0,c.width,c.height),d=pixels.data,gray=new Uint8Array(c.width*c.height);for(let i=0;i<gray.length;i++){let j=i*4,v=.299*d[j]+.587*d[j+1]+.114*d[j+2];gray[i]=Math.max(0,Math.min(255,(v-125)*1.4+133))}
+ if(mode==='adaptive'){let w=c.width,h=c.height,win=19,integral=new Uint32Array((w+1)*(h+1));for(let y=1;y<=h;y++){let row=0;for(let xx=1;xx<=w;xx++){row+=gray[(y-1)*w+xx-1];integral[y*(w+1)+xx]=integral[(y-1)*(w+1)+xx]+row}}for(let y=0;y<h;y++)for(let xx=0;xx<w;xx++){let x1=Math.max(0,xx-win),x2=Math.min(w,xx+win),y1=Math.max(0,y-win),y2=Math.min(h,y+win),sum=integral[y2*(w+1)+x2]-integral[y1*(w+1)+x2]-integral[y2*(w+1)+x1]+integral[y1*(w+1)+x1],mean=sum/Math.max(1,(x2-x1)*(y2-y1)),v=gray[y*w+xx]>mean-13?255:0,j=(y*w+xx)*4;d[j]=d[j+1]=d[j+2]=v}}
+ else for(let i=0;i<gray.length;i++){let j=i*4;d[j]=d[j+1]=d[j+2]=gray[i]}x.putImageData(pixels,0,0);return c;}
+async function getWorker(){if(s.ocrWorker)return s.ocrWorker;if(s.ocrLoad)return s.ocrLoad;
+ s.ocrLoad=(async()=>{if(!window.Tesseract)await loadOCRScript();el('ocrInfo').textContent='已加载 OCR 脚本，正在初始化日文识别模型…';const lang=el('lang').value;
+ // Host selection: worker and core files must also be reachable, not just tesseract.min.js.
+ const mirrors=[
+ {workerPath:'https://unpkg.com/tesseract.js@5.1.1/dist/worker.min.js',corePath:'https://unpkg.com/tesseract.js-core@5.0.0',langPath:'https://tessdata.projectnaptha.com/4.0.0'},
+ {workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.0.0',langPath:'https://tessdata.projectnaptha.com/4.0.0'}];
+ let errors=[];for(let i=0;i<mirrors.length;i++){let worker=null;try{el('ocrInfo').textContent='正在初始化 OCR 工作线程 '+(i+1)+' / '+mirrors.length+'（可能需下载较大语言模型）';let task=Tesseract.createWorker(lang,1,{...mirrors[i],logger:p=>{if(p?.status)el('ocrInfo').textContent=p.status+' '+Math.round((p.progress||0)*100)+'%'}});
+ worker=await Promise.race([task,new Promise((_,reject)=>setTimeout(()=>reject(new Error('OCR 初始化超过 45 秒')),45000))]);
+ await worker.setParameters({tessedit_pageseg_mode:Tesseract.PSM?.SINGLE_BLOCK||'6',preserve_interword_spaces:'1'});
+ s.ocrWorker=worker;s.workerLang=lang;el('ocrLamp').classList.add('ready');el('ocrInfo').textContent='日文 OCR 就绪';return worker;
+ }catch(e){errors.push('线路 '+(i+1)+': '+e.message);if(worker)try{await worker.terminate()}catch(_){}}}
+ throw new Error('OCR 脚本已载入，但工作线程 / WASM / 日语模型下载失败；可能是网络限制或本地文件环境。请通过 HTTPS 访问。'+errors.join('；'));
+ })().catch(e=>{s.ocrLoad=null;throw e});return s.ocrLoad;}
+el('lang').onchange=async()=>{if(s.ocrWorker){await s.ocrWorker.terminate();s.ocrWorker=null;s.ocrLoad=null;s.workerLang=null;el('ocrLamp').classList.remove('ready');el('ocrInfo').textContent='语言已切换，识别时重新载入';}};
+function normalize(t){return(t||'').replace(/\r/g,'').replace(/[ \t]+$/gm,'').replace(/\n{3,}/g,'\n\n').trim()}
+function classify(text){let lines=text.split('\n').map(x=>x.trim()).filter(Boolean),joined=lines.join(' ');if(!joined)return{kind:'dialogue',reason:'无内容'};if(/(セーブしますか|ロードしますか|よろしいですか|記録しました)/.test(joined))return{kind:'system',reason:'确认或存档词汇'};if(/(HP|MP|LV|EXP|ATK|DEF|経験値|防御力|攻撃力)/i.test(joined)||/[0-9０-９]/.test(joined)&&lines.length>=3)return{kind:'data',reason:'状态值与数字'};if(/(たたかう|まほう|どうぐ|アイテム|せってい|はじめる|はい|いいえ|こうげき|装備)/.test(joined)||lines.length>=3&&lines.filter(l=>l.length<12).length/lines.length>.75)return{kind:'menu',reason:'列表及菜单词汇'};if(lines.length>3&&joined.length>63)return{kind:'narration',reason:'长篇文字'};return{kind:'dialogue',reason:'短篇连续文本'}}
+const kindName={dialogue:'人物对话',narration:'剧情旁白',menu:'菜单选项',data:'属性列表',system:'系统提示'};
+function updateSemantic(){let guess=classify(el('original').value),chosen=el('kind').value;s.selectedKind=chosen==='auto'?guess.kind:chosen;el('semanticHint').textContent=(chosen==='auto'?'规则推测：'+guess.reason+'；':'用户指定；')+'当前：'+kindName[s.selectedKind]+'。屏幕结构和光标位置尚未经过专用模型训练验证。'}el('original').oninput=updateSemantic;el('kind').onchange=updateSemantic;
+function hashCanvas(canvas){let c=document.createElement('canvas');c.width=42;c.height=24;let x=c.getContext('2d');x.drawImage(canvas,0,0,42,24);let d=x.getImageData(0,0,42,24).data;return Array.from({length:42*24},(_,i)=>Math.round((d[i*4]*.3+d[i*4+1]*.59+d[i*4+2]*.11)/8))}
+function diffFingerprint(a,b){if(!a||!b)return 100;let sum=0;for(let i=0;i<a.length;i++)sum+=Math.abs(a[i]-b[i]);return sum/a.length;}
+async function recognize(auto=false){if(s.processing)return;if(!s.corrected){if(!auto)notify('请先点击“自动检测并拉正”。','error');return}let capture;try{capture=OCRCanvas()}catch(e){notify(e.message,'error');return}const fp=hashCanvas(capture);if(auto&&diffFingerprint(fp,s.lastFingerprint)<1.3)return;s.lastFingerprint=fp;s.processing=true;el('ocrBtn').disabled=true;try{notify('日文 OCR 正在处理当前文字框…');let worker=await getWorker();let response=await worker.recognize(capture),txt=normalize(response.data?.text);if(!txt){if(!auto)notify('未识别到文字。请调整文字框、预处理选项或者改善摄像头对焦。');return}if(auto&&txt===s.lastText)return;s.lastText=txt;el('original').value=txt;updateSemantic();s.history.unshift({text:txt,kind:s.selectedKind,time:new Date().toLocaleTimeString('zh-CN'),translation:''});s.history=s.history.slice(0,10);renderHistory();setTranslation('日文识别完成。请检查识别错误；翻译需要外部网页或自定义接口。',true);el('ocrInfo').textContent='OCR 已完成'+(Number.isFinite(response.data.confidence)?' · 置信度 '+Math.round(response.data.confidence)+'%':'');notify('已识别文字。可手动修正日文，再点击翻译。','ok');if(auto&&el('api').value.trim())translate();}catch(e){notify('日文 OCR 失败：'+e.message,'error');}finally{s.processing=false;el('ocrBtn').disabled=false;}}
+el('ocrBtn').onclick=()=>recognize(false);
+function renderHistory(){const container=el('history');container.replaceChildren();if(!s.history.length){let div=document.createElement('div');div.className='tiny';div.textContent='暂无记录。';container.append(div);return}for(const h of s.history){let b=document.createElement('button');b.className='hitem',b.type='button';let label=document.createElement('small');label.textContent=h.time+' · '+kindName[h.kind];let para=document.createElement('div');para.textContent=h.text.slice(0,170);b.append(label,para);b.onclick=()=>{el('original').value=h.text;updateSemantic();setTranslation(h.translation||'该条记录尚无译文。',!h.translation)};container.append(b)}}
+el('clearBtn').onclick=()=>{s.history=[];renderHistory();};el('copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(el('original').value);notify('已复制日文。','ok')}catch(e){notify('无法自动复制，请长按文字框复制。','error')}};
+function setTranslation(t,placeholder=false){let e=el('translation');e.textContent=t;e.classList.toggle('placeholder',placeholder)}
+function externalTranslate(){let t=el('original').value.trim();if(!t)return notify('请先识别日文文字。','error');const u='https://translate.google.com/?sl=ja&tl=zh-CN&text='+encodeURIComponent(t)+'&op=translate';window.open(u,'_blank','noopener,noreferrer');}
+el('externalBtn').onclick=externalTranslate;
+async function translate(){let text=el('original').value.trim();if(!text)return notify('请先识别日文。','error');let url=el('api').value.trim();if(!url)return externalTranslate();if(!/^https:\/\//i.test(url)&&!/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//i.test(url))return notify('自有接口需为 HTTPS（localhost 调试例外）。','error');el('translateBtn').disabled=true;setTranslation('正在请求你配置的翻译服务…',true);try{let ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),25000);let response;try{response=await fetch(url,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,kind:s.selectedKind,history:s.history.slice(1,6).reverse().map(h=>({text:h.text,kind:h.kind})),target_language:'zh-CN'}),signal:ctl.signal})}finally{clearTimeout(timer)}if(!response.ok)throw Error('HTTP '+response.status);let json=await response.json(),zh=json.translation;if(typeof zh!=='string'||!zh.trim())throw Error('接口未返回有效的 translation 字符串');setTranslation(zh);el('translateMode').textContent='自有 AI 服务';if(s.history[0]?.text===text){s.history[0].translation=zh;renderHistory()}notify('翻译完成。','ok')}catch(e){notify('翻译失败：'+e.message,'error');setTranslation('翻译接口未返回可用结果。',true)}finally{el('translateBtn').disabled=false}}el('translateBtn').onclick=translate;
+async function autoLoop(){if(!el('autoWatch').checked||!curSrc()||s.processing||document.visibilityState!=='visible')return;try{if(!s.quad){await detectScreen(true);return}await rectify();await findTextBoxes();await recognize(true)}catch(e){notify('自动检查失败：'+e.message,'error')}}
+el('autoWatch').onchange=()=>{if(s.autoTimer){clearInterval(s.autoTimer);s.autoTimer=null}if(el('autoWatch').checked){s.autoTimer=setInterval(autoLoop,4000);notify('自动检查已开启。约每 4 秒重新采样并检查文本，耗电量会增加。')}else notify('自动检查已关闭。')};
+window.addEventListener('pagehide',()=>{stopCam();if(s.url)URL.revokeObjectURL(s.url);if(s.ocrWorker)s.ocrWorker.terminate()});
+renderHistory();updateSemantic();drawRectified();if(location.protocol==='file:'||location.protocol==='edge:'){el('runtimeInfo').textContent='检测到本地文件模式：部分手机浏览器无法加载 OCR 工作线程。推荐 HTTPS 部署。';}
+</script>
+</body>
+</html>
